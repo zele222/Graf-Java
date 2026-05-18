@@ -22,7 +22,6 @@ public class TutteAlgorithm {
     public boolean initialize()
     {
         List<Vertex> frame = getGuaranteedFrame();
-
         if (frame == null || frame.isEmpty())
         {
             System.err.println("Nie znaleziono poprawnej ramy w grafie");
@@ -63,7 +62,10 @@ public class TutteAlgorithm {
 
                 while (true) {
                     List<Vertex> newCycle = splitIfShortcut(pretendent);
-                    if (newCycle == pretendent) break;
+                    if (newCycle == pretendent)
+                    {
+                        break;
+                    }
                     pretendent = newCycle;
                 }
 
@@ -117,10 +119,12 @@ public class TutteAlgorithm {
                         if(isConnectedWithoutCycle(left))
                         {
                             return left;
-                        }
-                        else if (isConnectedWithoutCycle(right))
+                        } else if (isConnectedWithoutCycle(right))
                         {
                             return right;
+                        } else
+                        {
+                            return cycle;
                         }
                     }
                 }

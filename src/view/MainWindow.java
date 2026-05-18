@@ -67,7 +67,7 @@ public class MainWindow{
             algorithm = new TutteAlgorithm(graph);
             if (algorithm.initialize())
             {
-                System.out.println("Inicjalizacja zakończona sukcesem! Można klikać 'Następny Krok'.");
+                System.out.println("sukces");
                 //przekazanie grafu do GraphPanel
             } else
             {
