@@ -10,7 +10,7 @@ import java.util.Set;
 public class TutteAlgorithm {
     private boolean hasFrame;
     private int iteration;
-    private AdjacencyList graph;
+    private final AdjacencyList graph;
 
     public TutteAlgorithm(AdjacencyList graph)
     {
@@ -227,6 +227,11 @@ public class TutteAlgorithm {
                 }
         }
         this.iteration++;
+    }
+
+    public int getIteration()
+    {
+        return iteration;
     }
 
 }
