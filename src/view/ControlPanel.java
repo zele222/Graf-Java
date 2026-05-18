@@ -11,12 +11,19 @@ public class ControlPanel {
 
     private JPanel panel;
     private JButton nextStepButton;
-    private JSpinner marginSpinner;
     private JButton skipAllButton;
     private JButton resetButton;
 
-    public ControlPanel()
+    private Runnable onNextStep;
+    private Runnable onSkipAll;
+    private Runnable onReset;
+
+    public ControlPanel(Runnable onNextStep, Runnable onSkipAll, Runnable onReset)
     {
+        this.onNextStep = onNextStep;
+        this.onSkipAll = onSkipAll;
+        this.onReset = onReset;
+
         initialize();
         addElements();
     }
@@ -30,17 +37,17 @@ public class ControlPanel {
     {
         resetButton = new JButton("Resetuj");
         resetButton.setFocusable(false);
-        resetButton.addActionListener(e->{ System.out.println("reset");});
+        resetButton.addActionListener(e->{ if (onReset != null) onReset.run();});
         panel.add(resetButton);
 
         nextStepButton = new JButton("Następny krok");
         nextStepButton.setFocusable(false);
-        nextStepButton.addActionListener(e->{ System.out.println("next step");});
+        nextStepButton.addActionListener(e->{ if (onNextStep != null) onNextStep.run();});
         panel.add(nextStepButton);
 
         skipAllButton = new JButton("Przejdź do końca");
         skipAllButton.setFocusable(false);
-        skipAllButton.addActionListener(e ->{ System.out.println("skip all");});
+        skipAllButton.addActionListener(e ->{ if (onSkipAll != null) onSkipAll.run();});
         panel.add(skipAllButton);
     }
 

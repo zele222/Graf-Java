@@ -28,18 +28,54 @@ public class MainWindow{
 
     private void addElements()
     {
-        ControlPanel controlPanel = new ControlPanel();
+        GraphPanel graphPanel = new GraphPanel();
+        window.add(graphPanel, BorderLayout.CENTER);
+
+        ControlPanel controlPanel = new ControlPanel(
+        () -> //nextStep
+        {
+            if (algorithm != null)
+            {
+                algorithm.nextStep();
+                graphPanel.repaint();
+            }
+        },
+        () -> //skipAll
+        {
+            if (algorithm != null)
+            {
+                for (int i = 0; i < 10000; i++)
+                {
+                    algorithm.nextStep();
+                }
+                graphPanel.repaint();
+            }
+        },
+        () -> //reset
+        {
+            if (algorithm != null)
+            {
+                System.out.println("Kliknięto reset");
+            }
+        }
+        );
+
         window.add(controlPanel.getPanel(), BorderLayout.SOUTH);
 
         TopMenuBar menuBar = new TopMenuBar(graph -> {
             System.out.println("Graf wczytany");
             algorithm = new TutteAlgorithm(graph);
+            if (algorithm.initialize())
+            {
+                System.out.println("Inicjalizacja zakończona sukcesem! Można klikać 'Następny Krok'.");
+                //przekazanie grafu do GraphPanel
+            } else
+            {
+                JOptionPane.showMessageDialog(window, "graf nie ma poprawnej ramy zewnętrznej", "Error", JOptionPane.ERROR_MESSAGE);
+            }
         });
 
         window.setJMenuBar(menuBar.getMenuBar());
-
-        GraphPanel graphPanel = new GraphPanel();
-        window.add(graphPanel, BorderLayout.CENTER);
     }
 
     private void show()
