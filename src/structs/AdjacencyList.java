@@ -3,7 +3,8 @@ package structs;
 import java.util.Collection;
 import java.util.HashMap;
 
-public class AdjacencyList {
+public class AdjacencyList
+{
     private HashMap<Integer, Vertex> listaSasiedztwa;
 
     public AdjacencyList()

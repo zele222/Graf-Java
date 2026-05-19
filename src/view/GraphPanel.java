@@ -1,20 +1,90 @@
 package view;
 
+import structs.AdjacencyList;
+import structs.Edge;
+import structs.Vertex;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class GraphPanel extends JPanel {
+
+    structs.AdjacencyList graph;
+    private double zoom = 150.0;
+    private double offsetX = 0.0;
+    private double offsetY = 0.0;
+    private int lastMouseX;
+    private int lastMouseY;
 
     public GraphPanel() {
         initialize();
     }
 
-    private void initialize() {
+    private void initialize()
+    {
         setBackground(new Color(43, 45, 48));
+        this.addMouseWheelListener(e -> {
+
+            double oldZoom = zoom;
+
+            double scaleFactor = Math.pow(1.1, -e.getPreciseWheelRotation());
+            zoom *= scaleFactor;
+
+            if (zoom < 10) zoom = 10;
+            if (zoom > 9999) zoom = 9999;
+
+            double actualScaleFactor = zoom / oldZoom;
+            double mouseX = e.getX() - (getWidth() / 2.0) - offsetX;
+            double mouseY = e.getY() - (getHeight() / 2.0) - offsetY;
+            offsetX -= mouseX * (actualScaleFactor - 1.0);
+            offsetY -= mouseY * (actualScaleFactor - 1.0);
+
+            repaint();
+        });
+
+        MouseAdapter mouseAdapter = new MouseAdapter()
+        {
+            @Override
+            public void mousePressed(MouseEvent e)
+            {
+                lastMouseX = e.getX();
+                lastMouseY = e.getY();
+            }
+
+            @Override
+            public void mouseDragged(MouseEvent e)
+            {
+                int deltaX = e.getX() - lastMouseX;
+                int deltaY = e.getY() - lastMouseY;
+
+                offsetX += deltaX;
+                offsetY += deltaY;
+
+                lastMouseX = e.getX();
+                lastMouseY = e.getY();
+
+                repaint();
+            }
+        };
+
+        this.addMouseListener(mouseAdapter);
+        this.addMouseMotionListener(mouseAdapter);
+    }
+
+    public void takeGraph(AdjacencyList graph)
+    {
+        this.graph = graph;
+        repaint();
+    }
+
+    public void resetView()
+    {
+        this.zoom = 150.0;
+        this.offsetX = 0.0;
+        this.offsetY = 0.0;
+        repaint();
     }
 
     @Override
@@ -26,8 +96,43 @@ public class GraphPanel extends JPanel {
 
         g2d.setColor(Color.LIGHT_GRAY);
         g2d.setStroke(new BasicStroke(3));
-        //g2d.drawLine(x1, y1, x2, y2);
-        //g2d.fillOval(x1 - promien, y1 - promien, srednica, srednica);
 
+        int radius = 3;
+
+        g2d.translate(((double) getWidth() / 2) + offsetX, ((double) getHeight() / 2) + offsetY);
+
+        if (graph == null)
+        {
+            return;
+        }
+
+
+        for(Vertex V : graph.getAdjacencyList()) {
+            for (Edge E : V.getEdges()) {
+                Vertex neighbor = graph.getVertex(E.getTargetVertexId());
+                if (neighbor.getId() < V.getId()) {
+                    int v1X = (int) (neighbor.getX() * zoom);
+                    int v2X = (int) (V.getX() * zoom);
+                    int v1Y = (int) (neighbor.getY() * zoom);
+                    int v2Y = (int) (V.getY() * zoom);
+                    g2d.drawLine(v1X, v1Y, v2X, v2Y);
+                }
+            }
+        }
+        for(Vertex V : graph.getAdjacencyList())
+        {
+            if (V.getIsOuter())
+            {
+                g2d.setColor(Color.RED);
+            } else
+            {
+                g2d.setColor(Color.CYAN);
+            }
+            int x = (int)(V.getX() * zoom);
+            int y = (int)(V.getY() * zoom);
+            System.out.println(x);
+            System.out.println(y);
+            g2d.fillOval((x - radius), y - radius, radius *2, radius *2);
+        }
     }
 }

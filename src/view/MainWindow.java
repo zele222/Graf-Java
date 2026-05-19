@@ -5,7 +5,8 @@ import javax.swing.*;
 import java.awt.*;
 
 
-public class MainWindow{
+public class MainWindow
+{
 
     private JFrame window;
     private TutteAlgorithm algorithm;
@@ -44,7 +45,7 @@ public class MainWindow{
         {
             if (algorithm != null)
             {
-                for (int i = 0; i < 10000; i++)
+                for (int i = 0; i < 10000 - algorithm.getIteration(); i++)
                 {
                     algorithm.nextStep();
                 }
@@ -55,7 +56,8 @@ public class MainWindow{
         {
             if (algorithm != null)
             {
-                System.out.println("Kliknięto reset");
+                algorithm.reset();
+                graphPanel.resetView();
             }
         }
         );
@@ -68,7 +70,8 @@ public class MainWindow{
             if (algorithm.initialize())
             {
                 System.out.println("sukces");
-                //przekazanie grafu do GraphPanel
+                graphPanel.takeGraph(graph);
+                graphPanel.resetView();
             } else
             {
                 JOptionPane.showMessageDialog(window, "graf nie ma poprawnej ramy zewnętrznej", "Error", JOptionPane.ERROR_MESSAGE);

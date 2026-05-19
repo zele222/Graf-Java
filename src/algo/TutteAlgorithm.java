@@ -181,13 +181,12 @@ public class TutteAlgorithm {
     {
         int n = frame.size();
         double angle = 2.0 * Math.PI/n;
-        double SCALE = 150.0;//to trzeba dostosowac do wielkosci okna w graphpanel
 
         for(int i = 0; i < frame.size(); i++)
         {
             Vertex currentVertex = frame.get(i);
-            currentVertex.setX(SCALE * Math.cos(i * angle));
-            currentVertex.setY(SCALE * Math.sin(i * angle));
+            currentVertex.setX(Math.cos(i * angle));
+            currentVertex.setY(Math.sin(i * angle));
             currentVertex.setOuter(true);
         }
     }
@@ -234,4 +233,17 @@ public class TutteAlgorithm {
         return iteration;
     }
 
+    public void reset()
+    {
+        this.iteration = 0;
+        this.hasFrame = false;
+
+        for (Vertex currentVertex : graph.getAdjacencyList())
+        {
+            currentVertex.setX(0.0);
+            currentVertex.setY(0.0);
+            currentVertex.setOuter(false);
+        }
+        initialize();
+    }
 }

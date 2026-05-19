@@ -58,7 +58,9 @@ public class TopMenuBar {
         fileMenu.add(openMenuItem);
 
         saveMenuItem = new JMenuItem("Zapisz");
-        saveMenuItem.addActionListener(e->{System.out.println("Zapisz Plik");});
+        saveMenuItem.addActionListener(e->{
+            System.out.println("Zapisz Plik");
+        });
         fileMenu.add(saveMenuItem);
 
         return fileMenu;
