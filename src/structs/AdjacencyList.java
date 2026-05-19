@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 public class AdjacencyList
 {
-    private HashMap<Integer, Vertex> listaSasiedztwa;
+    private final HashMap<Integer, Vertex> listaSasiedztwa;
 
     public AdjacencyList()
     {

@@ -20,7 +20,7 @@ public class TopMenuBar {
     private JCheckBoxMenuItem toggleEdgeNameMenuItem;
 
 
-    private Consumer<AdjacencyList> graphLoaded;
+    private final Consumer<AdjacencyList> graphLoaded;
 
 
     public TopMenuBar(Consumer<AdjacencyList> graphLoaded)
