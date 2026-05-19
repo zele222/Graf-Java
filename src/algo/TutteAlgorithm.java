@@ -1,5 +1,6 @@
 package algo;
 
+import com.sun.nio.sctp.IllegalReceiveException;
 import structs.*;
 
 import java.util.ArrayList;
@@ -19,29 +20,74 @@ public class TutteAlgorithm {
         this.iteration = 0;
     }
 
-    public boolean initialize()
+    public void initialize()
     {
         List<Vertex> frame = getGuaranteedFrame();
         if (frame == null || frame.isEmpty())
         {
-            System.err.println("Nie znaleziono poprawnej ramy w grafie");
-            return false;
+            throw new IllegalArgumentException("Nie znaleziono poprawnej ramy w grafie.");
+        }
+
+        if (!isFullyConnected())
+        {
+            throw new IllegalArgumentException("Graf nie jest spójny");
+        }
+
+        if (!isPotentiallyPlanar())
+        {
+            throw new IllegalArgumentException("Graf ma za dużo krawędzi");
         }
 
         tutteFormOuter(frame);
         this.hasFrame = true;
 
-        return true;
     }
 
-    private List<Vertex> getGuaranteedFrame() {
+    private boolean isFullyConnected()
+    {
+        if(graph.getAdjacencyList().isEmpty()) return false;
+        Set<Integer> visitedIds = new HashSet<>();
+        Vertex start = graph.getAdjacencyList().iterator().next();
+        simpleDfs(start, visitedIds);
+        return visitedIds.size() == graph.getAdjacencyList().size();
+    }
+
+    private void simpleDfs(Vertex current, Set<Integer> visitedIds)
+    {
+        visitedIds.add(current.getId());
+        for (Edge e : current.getEdges())
+        {
+            Vertex neighbor = graph.getVertex(e.getTargetVertexId());
+            if (neighbor != null && !visitedIds.contains(neighbor.getId()))
+            {
+                simpleDfs(neighbor, visitedIds);
+            }
+        }
+    }
+
+    private boolean isPotentiallyPlanar()
+    {
+        int vCount = graph.getAdjacencyList().size();
+        if (vCount < 3) return true;
+        int eCount = 0;
+
+        for (Vertex v : graph.getAdjacencyList()) {
+            eCount += v.getEdges().size();
+        }
+        eCount = eCount / 2;
+        return eCount <= (3 * vCount - 6);
+    }
+
+    private List<Vertex> getGuaranteedFrame()
+    {
         for(Vertex v : graph.getAdjacencyList())
         {
             List<Vertex> path = new ArrayList<>();
             Set<Vertex> visited = new HashSet<>();
 
             List<Vertex> frame = dfsFindFrame(v, v, visited, path);
-            if (frame != null) {
+            if (frame != null)
+            {
                 return frame;
             }
         }

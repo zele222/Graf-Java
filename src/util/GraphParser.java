@@ -25,16 +25,12 @@ public class GraphParser {
                 adjList.addEdge(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), Double.parseDouble(parts[3]), parts[0]);
                 adjList.addEdge(Integer.parseInt(parts[2]), Integer.parseInt(parts[1]), Double.parseDouble(parts[3]), parts[0]);
             }
-        }
-        catch (IOException e)
+        } catch (IOException e)
         {
-                System.err.println("Wystąpił błąd podczas czytania pliku: " + e.getMessage());
-                return null;
-        }
-        catch (ArrayIndexOutOfBoundsException | NumberFormatException e)
+            throw new RuntimeException("Wystąpił błąd podczas czytania pliku: " + e.getMessage());
+        } catch (ArrayIndexOutOfBoundsException | NumberFormatException e)
         {
-        System.err.println("Plik źle sformatowany: " + e.getMessage());
-        return null;
+            throw new IllegalArgumentException("Plik jest źle sformatowany. Poprawnie: [nazwa] [v1] [v2] [waga].");
         }
 
         return adjList;

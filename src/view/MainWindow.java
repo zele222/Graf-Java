@@ -67,14 +67,16 @@ public class MainWindow
         TopMenuBar menuBar = new TopMenuBar(graph -> {
             System.out.println("Graf wczytany");
             algorithm = new TutteAlgorithm(graph);
-            if (algorithm.initialize())
+            try
             {
+                algorithm.initialize();
+
                 System.out.println("sukces");
                 graphPanel.takeGraph(graph);
                 graphPanel.resetView();
-            } else
+            } catch(IllegalArgumentException e)
             {
-                JOptionPane.showMessageDialog(window, "graf nie ma poprawnej ramy zewnętrznej", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(window, e.getMessage(), "Błąd budowania grafu", JOptionPane.ERROR_MESSAGE);
             }
         });
 

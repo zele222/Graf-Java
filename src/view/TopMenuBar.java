@@ -47,11 +47,18 @@ public class TopMenuBar {
             int returnVal = fc.showOpenDialog(null);
 
             if (returnVal == JFileChooser.APPROVE_OPTION) {
-                AdjacencyList graph = GraphParser.turnToGraph(fc.getSelectedFile());
-                if (graph != null && graphLoaded != null)
-                {
-                    graphLoaded.accept(graph);
+                try {
+                    AdjacencyList graph = GraphParser.turnToGraph(fc.getSelectedFile());
+                    if (graph != null && graphLoaded != null)
+                    {
+                        graphLoaded.accept(graph);
+                    }
                 }
+                catch(Exception exc)
+                {
+                    JOptionPane.showMessageDialog(menuBar, exc.getMessage(), "Błąd wczytywania pliku", JOptionPane.ERROR_MESSAGE);
+                }
+
             }
         });
         //openMenuItem.setIcon(new ImageIcon("images/load.png"));

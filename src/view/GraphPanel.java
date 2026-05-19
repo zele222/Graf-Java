@@ -33,7 +33,8 @@ public class GraphPanel extends JPanel {
             zoom *= scaleFactor;
 
             if (zoom < 10) zoom = 10;
-            if (zoom > 9999) zoom = 9999;
+            if (zoom > 2.9809518375513878E7) zoom = 2.9809518375513878E7;
+            System.out.println(zoom);
 
             double actualScaleFactor = zoom / oldZoom;
             double mouseX = e.getX() - (getWidth() / 2.0) - offsetX;
@@ -130,8 +131,6 @@ public class GraphPanel extends JPanel {
             }
             int x = (int)(V.getX() * zoom);
             int y = (int)(V.getY() * zoom);
-            System.out.println(x);
-            System.out.println(y);
             g2d.fillOval((x - radius), y - radius, radius *2, radius *2);
         }
     }
