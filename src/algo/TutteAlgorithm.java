@@ -1,6 +1,5 @@
 package algo;
 
-import com.sun.nio.sctp.IllegalReceiveException;
 import structs.*;
 
 import java.util.ArrayList;
@@ -277,6 +276,10 @@ public class TutteAlgorithm {
     public int getIteration()
     {
         return iteration;
+    }
+
+    public AdjacencyList getGraph() {
+        return this.graph;
     }
 
     public void reset()

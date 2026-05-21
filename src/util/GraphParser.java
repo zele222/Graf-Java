@@ -1,14 +1,13 @@
 package util;
 
 import structs.AdjacencyList;
+import structs.Vertex;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.util.Locale;
 
 public class GraphParser {
-    public static AdjacencyList turnToGraph(File file)
+    public static AdjacencyList loadGraph(File file)
     {
         AdjacencyList adjList = new AdjacencyList();
 
@@ -35,4 +34,21 @@ public class GraphParser {
 
         return adjList;
     }
+
+    public static void saveCoords(AdjacencyList graph, String filename)
+    {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(filename)))
+        {
+            for (Vertex V : graph.getAdjacencyList())
+            {
+                writer.printf(Locale.US, "%d %.6f %.6f\n", V.getId(), V.getX(), V.getY());
+            }
+            System.out.println("Pomyślnie zapisano współrzędne do pliku.");
+
+        } catch (IOException e)
+        {
+            throw new RuntimeException("Błąd zapisywania koordynatów: " + e.getMessage());
+        }
+    }
+
 }

@@ -1,8 +1,12 @@
 package view;
 import algo.TutteAlgorithm;
+import structs.AdjacencyList;
+import structs.Vertex;
 
 import javax.swing.*;
 import java.awt.*;
+
+import static util.GraphParser.saveCoords;
 
 
 public class MainWindow
@@ -70,15 +74,22 @@ public class MainWindow
             try
             {
                 algorithm.initialize();
-
                 System.out.println("sukces");
                 graphPanel.takeGraph(graph);
                 graphPanel.resetView();
             } catch(IllegalArgumentException e)
             {
                 JOptionPane.showMessageDialog(window, e.getMessage(), "Błąd budowania grafu", JOptionPane.ERROR_MESSAGE);
+                algorithm = null;
             }
-        });
+        }, filePath -> {
+            if (algorithm != null && algorithm.getGraph() != null)
+            {
+                saveCoords(algorithm.getGraph(), filePath);
+            }
+            else {
+                JOptionPane.showMessageDialog(window, "Nie ma żadnego grafu do zapisania", "Błąd", JOptionPane.WARNING_MESSAGE);
+            }});
 
         window.setJMenuBar(menuBar.getMenuBar());
     }

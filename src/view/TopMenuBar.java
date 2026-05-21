@@ -2,7 +2,6 @@ package view;
 
 import structs.AdjacencyList;
 import util.GraphParser;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.function.Consumer;
@@ -21,11 +20,13 @@ public class TopMenuBar {
 
 
     private final Consumer<AdjacencyList> graphLoaded;
+    private final Consumer<String> fileSaved;
 
 
-    public TopMenuBar(Consumer<AdjacencyList> graphLoaded)
+    public TopMenuBar(Consumer<AdjacencyList> graphLoaded, Consumer<String> fileSaved)
     {
         this.graphLoaded = graphLoaded;
+        this.fileSaved = fileSaved;
         initialize();
         menuBar.add(createFileMenu());
         menuBar.add(createViewMenu());
@@ -48,8 +49,8 @@ public class TopMenuBar {
 
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 try {
-                    AdjacencyList graph = GraphParser.turnToGraph(fc.getSelectedFile());
-                    if (graph != null && graphLoaded != null)
+                    AdjacencyList graph = GraphParser.loadGraph(fc.getSelectedFile());
+                    if (graphLoaded != null)
                     {
                         graphLoaded.accept(graph);
                     }
@@ -61,12 +62,24 @@ public class TopMenuBar {
 
             }
         });
-        //openMenuItem.setIcon(new ImageIcon("images/load.png"));
         fileMenu.add(openMenuItem);
 
         saveMenuItem = new JMenuItem("Zapisz");
         saveMenuItem.addActionListener(e->{
-            System.out.println("Zapisz Plik");
+            JFileChooser fc = new JFileChooser();
+            int returnVal = fc.showSaveDialog(null);
+            if (returnVal == JFileChooser.APPROVE_OPTION){
+                try{
+                    String filepath = fc.getSelectedFile().getAbsolutePath();
+                    if(fileSaved != null)
+                    {
+                        fileSaved.accept(filepath);
+                    }
+                }catch(Exception exc)
+                {
+                    JOptionPane.showMessageDialog(menuBar, exc.getMessage(), "Błąd zapisania pliku", JOptionPane.ERROR_MESSAGE);
+                }
+            }
         });
         fileMenu.add(saveMenuItem);
 
