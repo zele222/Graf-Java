@@ -18,7 +18,9 @@ public class MainWindow
     public MainWindow()
     {
         initialize();
-        addElements();
+        GraphPanel gP = addElementsControlPanel();
+        addElementsTopMenuBar(gP);
+
         show();
     }
 
@@ -31,7 +33,7 @@ public class MainWindow
         window.setResizable(true);
     }
 
-    private void addElements()
+    private GraphPanel addElementsControlPanel()
     {
         GraphPanel graphPanel = new GraphPanel();
         window.add(graphPanel, BorderLayout.CENTER);
@@ -68,6 +70,11 @@ public class MainWindow
 
         window.add(controlPanel.getPanel(), BorderLayout.SOUTH);
 
+        return graphPanel;
+    }
+
+    private void addElementsTopMenuBar(GraphPanel graphPanel)
+    {
         TopMenuBar menuBar = new TopMenuBar(graph -> {
             System.out.println("Graf wczytany");
             algorithm = new TutteAlgorithm(graph);
@@ -89,10 +96,23 @@ public class MainWindow
             }
             else {
                 JOptionPane.showMessageDialog(window, "Nie ma żadnego grafu do zapisania", "Błąd", JOptionPane.WARNING_MESSAGE);
-            }});
+            }}, (optionName, isChecked) ->{
+            switch (optionName) {
+                case "weights":
+                    graphPanel.doDrawWeights(isChecked);
+                    break;
+                case "edgeNames":
+                    graphPanel.doDrawEdgeNames(isChecked);
+                    break;
+                case "vertexNames":
+                    graphPanel.doDrawVertexNames(isChecked);
+                    break;
+            }
+        });
 
         window.setJMenuBar(menuBar.getMenuBar());
     }
+
 
     private void show()
     {

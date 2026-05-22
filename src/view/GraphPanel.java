@@ -17,6 +17,9 @@ public class GraphPanel extends JPanel {
     private double offsetY = 0.0;
     private int lastMouseX;
     private int lastMouseY;
+    boolean bool_drawEdgeNames = false;
+    boolean bool_drawWeight = false;
+    boolean bool_drawVertexNames = false;
 
     public GraphPanel() {
         initialize();
@@ -121,12 +124,15 @@ public class GraphPanel extends JPanel {
                     int midX = (v1X + v2X) / 2;
                     int midY = (v1Y + v2Y) / 2;
 
-                    g2d.setColor(Color.GREEN);
-                    g2d.drawString(E.getName(), midX, midY + 5);
-
-                    String weight = String.valueOf(E.getWeight());
-                    g2d.setColor(Color.blue);
-                    g2d.drawString(weight, midX, midY - 5);
+                    if(bool_drawEdgeNames) {
+                        g2d.setColor(new Color(169, 227, 75));
+                        g2d.drawString(E.getName(), midX, midY + 5);
+                    }
+                    if(bool_drawWeight) {
+                        String weight = String.valueOf(E.getWeight());
+                        g2d.setColor(new Color(204, 165, 255));
+                        g2d.drawString(weight, midX, midY - 5);
+                    }
                 }
             }
         }
@@ -137,16 +143,38 @@ public class GraphPanel extends JPanel {
 
             if (V.getIsOuter())
             {
-                g2d.setColor(Color.RED);
+                g2d.setColor(new Color(255, 107, 107));
             } else
             {
-                g2d.setColor(Color.CYAN);
+                g2d.setColor(new Color(77, 171, 247));
             }
-
             g2d.fillOval((x - radius), y - radius, radius *2, radius *2);
-            String vId = String.valueOf(V.getId());
-            g2d.setColor(Color.orange);
-            g2d.drawString(vId, x+5, y+ 5);
+
+            if(bool_drawVertexNames) {
+                String vId = String.valueOf(V.getId());
+                g2d.setColor(Color.ORANGE);
+                g2d.drawString(vId, x + 5, y + 5);
+            }
         }
     }
+
+
+    public void doDrawVertexNames(boolean b)
+    {
+        bool_drawVertexNames = b;
+        repaint();
+    }
+
+    public void doDrawEdgeNames(boolean b)
+    {
+        bool_drawEdgeNames = b;
+        repaint();
+    }
+
+    public void doDrawWeights(boolean b)
+    {
+        bool_drawWeight = b;
+        repaint();
+    }
+
 }

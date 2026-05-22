@@ -4,6 +4,7 @@ import structs.AdjacencyList;
 import util.GraphParser;
 import javax.swing.*;
 import java.awt.*;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 
@@ -22,12 +23,14 @@ public class TopMenuBar {
 
     private final Consumer<AdjacencyList> graphLoaded;
     private final Consumer<String> fileSaved;
+    private final BiConsumer<String, Boolean> viewChanged;
 
 
-    public TopMenuBar(Consumer<AdjacencyList> graphLoaded, Consumer<String> fileSaved)
+    public TopMenuBar(Consumer<AdjacencyList> graphLoaded, Consumer<String> fileSaved, BiConsumer<String, Boolean> viewChanged)
     {
         this.graphLoaded = graphLoaded;
         this.fileSaved = fileSaved;
+        this.viewChanged = viewChanged;
         initialize();
         menuBar.add(createFileMenu());
         menuBar.add(createViewMenu());
@@ -92,25 +95,28 @@ public class TopMenuBar {
         viewMenu = new JMenu("Widok");
         viewMenu.setFont(viewMenu.getFont().deriveFont(Font.BOLD));
 
-        toggleValMenuItem = new JCheckBoxMenuItem("Pokaż wagi", true);
+        toggleValMenuItem = new JCheckBoxMenuItem("Pokaż wagi", false);
         toggleValMenuItem.addActionListener(e -> {
-            boolean isShowing = toggleValMenuItem.isSelected();
-            System.out.println("Wagi widoczne: " + isShowing);
-
+            if(viewChanged!=null)
+            {
+                viewChanged.accept("weights", toggleValMenuItem.isSelected());
+            }
         });
         viewMenu.add(toggleValMenuItem);
 
         toggleEdgeNameMenuItem = new JCheckBoxMenuItem("Pokaż nazwy krawędzi", false);
         toggleEdgeNameMenuItem.addActionListener(e -> {
-            boolean isShowing = toggleEdgeNameMenuItem.isSelected();
-            System.out.println("Nazwy krawędzi widoczne: " + isShowing);
+            if (viewChanged != null) {
+                viewChanged.accept("edgeNames", toggleEdgeNameMenuItem.isSelected());
+            }
         });
         viewMenu.add(toggleEdgeNameMenuItem);
 
         toggleVertexNameMenuItem = new JCheckBoxMenuItem("Pokaż nazwy węzłów", false);
         toggleVertexNameMenuItem.addActionListener(e -> {
-            boolean isShowing = toggleVertexNameMenuItem.isSelected();
-            System.out.println("Nazwy węzłów widoczne: " + isShowing);
+            if (viewChanged != null) {
+                viewChanged.accept("vertexNames", toggleVertexNameMenuItem.isSelected());
+            }
         });
         viewMenu.add(toggleVertexNameMenuItem);
 
