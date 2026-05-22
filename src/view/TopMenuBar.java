@@ -17,6 +17,7 @@ public class TopMenuBar {
     private JMenuItem saveMenuItem;
     private JCheckBoxMenuItem toggleValMenuItem;
     private JCheckBoxMenuItem toggleEdgeNameMenuItem;
+    private JCheckBoxMenuItem toggleVertexNameMenuItem;
 
 
     private final Consumer<AdjacencyList> graphLoaded;
@@ -105,6 +106,13 @@ public class TopMenuBar {
             System.out.println("Nazwy krawędzi widoczne: " + isShowing);
         });
         viewMenu.add(toggleEdgeNameMenuItem);
+
+        toggleVertexNameMenuItem = new JCheckBoxMenuItem("Pokaż nazwy węzłów", false);
+        toggleVertexNameMenuItem.addActionListener(e -> {
+            boolean isShowing = toggleVertexNameMenuItem.isSelected();
+            System.out.println("Nazwy węzłów widoczne: " + isShowing);
+        });
+        viewMenu.add(toggleVertexNameMenuItem);
 
         return viewMenu;
     }

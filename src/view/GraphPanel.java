@@ -11,7 +11,7 @@ import java.awt.event.MouseEvent;
 
 public class GraphPanel extends JPanel {
 
-    structs.AdjacencyList graph;
+    AdjacencyList graph;
     private double zoom = 150.0;
     private double offsetX = 0.0;
     private double offsetY = 0.0;
@@ -95,7 +95,7 @@ public class GraphPanel extends JPanel {
         Graphics2D g2d = (Graphics2D) g;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        g2d.setColor(Color.LIGHT_GRAY);
+
         g2d.setStroke(new BasicStroke(3));
 
         int radius = 3;
@@ -116,12 +116,25 @@ public class GraphPanel extends JPanel {
                     int v2X = (int) (V.getX() * zoom);
                     int v1Y = (int) (neighbor.getY() * zoom);
                     int v2Y = (int) (V.getY() * zoom);
+                    g2d.setColor(Color.LIGHT_GRAY);
                     g2d.drawLine(v1X, v1Y, v2X, v2Y);
+                    int midX = (v1X + v2X) / 2;
+                    int midY = (v1Y + v2Y) / 2;
+
+                    g2d.setColor(Color.GREEN);
+                    g2d.drawString(E.getName(), midX, midY + 5);
+
+                    String weight = String.valueOf(E.getWeight());
+                    g2d.setColor(Color.blue);
+                    g2d.drawString(weight, midX, midY - 5);
                 }
             }
         }
         for(Vertex V : graph.getAdjacencyList())
         {
+            int x = (int)(V.getX() * zoom);
+            int y = (int)(V.getY() * zoom);
+
             if (V.getIsOuter())
             {
                 g2d.setColor(Color.RED);
@@ -129,9 +142,11 @@ public class GraphPanel extends JPanel {
             {
                 g2d.setColor(Color.CYAN);
             }
-            int x = (int)(V.getX() * zoom);
-            int y = (int)(V.getY() * zoom);
+
             g2d.fillOval((x - radius), y - radius, radius *2, radius *2);
+            String vId = String.valueOf(V.getId());
+            g2d.setColor(Color.orange);
+            g2d.drawString(vId, x+5, y+ 5);
         }
     }
 }
