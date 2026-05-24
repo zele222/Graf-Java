@@ -37,7 +37,6 @@ public class GraphPanel extends JPanel {
 
             if (zoom < 10) zoom = 10;
             if (zoom > 2.9809518375513878E7) zoom = 2.9809518375513878E7;
-            System.out.println(zoom);
 
             double actualScaleFactor = zoom / oldZoom;
             double mouseX = e.getX() - (getWidth() / 2.0) - offsetX;
